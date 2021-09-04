@@ -14,23 +14,23 @@ class Node {
 	public Node addChild(Node child) {
 		if(!(child == null)) {
 			child.setParent(this);
-			this.children.add(child);
+			children.add(child);
 		}
 		return child;
 	}
 	
 	public void deleteNode() {
 		if(parent != null) {
-			int offset = this.parent.getChildren().indexOf(this);
-			this.parent.getChildren().remove(this);
+			int offset = parent.getChildren().indexOf(this);
+			parent.getChildren().remove(this);
 			for(Node i : getChildren()) {
-				i.setParent(this.parent);
+				i.setParent(parent);
 			}
-			this.parent.getChildren().addAll(offset,this.getChildren());
+			parent.getChildren().addAll(offset,getChildren());
 		} else {
 			deleteRootNode();
 		}
-		//this.getChildren().clear();
+		getChildren().clear();
 	}
 	
 	public Node deleteRootNode() {
@@ -47,7 +47,7 @@ class Node {
 			}
 			newParent.getChildren().addAll(getChildren());
 		}
-		this.getChildren().clear();
+		getChildren().clear();
 		return newParent;
 	}
 	
@@ -166,11 +166,14 @@ class Node {
 	public void setParent(Node parent) {
 		this.parent = parent;
 	}
-	
-	
+
+	public static void printTree(Node n, String str) {
+		System.out.println(str + "(" + n.getLabel() + ")");
+		n.getChildren().forEach(i ->  printTree(i,str + str));
+	}
 }
 
-public class Lab4 {
+class Lab4 {
 	static Node root = init();
 	
 	public static ArrayList<Integer> encoding() {
@@ -273,17 +276,19 @@ public class Lab4 {
 	
 	private static void printTree(Node n,String str) {
 		System.out.println(str + "(" + n.getLabel() + ")");
-		n.getChildren().forEach(i ->  printTree(i,str + str));
+		n.getChildren().forEach(i ->  printTree(i, str + str));
 	}
 	
 	public static void main(String [] args) {
 		int size = root.getSize();
 		ArrayList<Integer> arrOfN = new ArrayList<Integer>();
 		for(int i = 1; i <= size;i++) { arrOfN.add(i); }
-		printTree(root,"-");
+		System.out.println("After init...");
+		printTree(root, "-");
+		System.out.println("Encoding...");
 		ArrayList<Integer> s = encoding();
-		System.out.println("S: "+s);
-		//decoding(s,arrOfN,size);
-		printTree(decoding(s,arrOfN,size),"-");
+		System.out.println("S: " + s);
+		System.out.println("Decoding ...");
+		printTree(decoding(s, arrOfN,size), "-");
 	}
 }
